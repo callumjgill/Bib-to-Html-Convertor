@@ -2,9 +2,8 @@
 Author: Callum J Gill.
 Email: callum.j.gill@googlemail.com
 Date created: 21/05/20
-Date modified: 21/05/20
 
-Description: Takes a .bib file as input and reads the relevant information
+Description: Takes a .bib file as input and stores the relevant information
 """
 # EXTERNAL MODULES
 import os
@@ -27,17 +26,8 @@ def readBib(bib_file):
     ext = bib_file.name.rpartition(".")[-1]
     assert ext == "bib", r"%s is not a .bib file!" % bib_file.name # Call an AssertError if file isn't a .bib file
     contents = bib_file.read() # Contents of the .bib file
-    # Find all the indexes for each @ char in the .bib file i.e. find the start of each reference
-    ref_indexes = [i for i, char in enumerate(contents) if char == "@"] # All indexes of the start of each reference in the file
-    ref_indexes.append(-1) # Prevents an IndexError occuring in the list when the final entry is reached
-    ref_list = []
-    for i, index in enumerate(ref_indexes):
-        next_index = ref_indexes[i+1]
-        if next_index == -1:
-            ref_list.append(contents[index:])
-            break # break the loop once the last entry is read and stored
-        ref_list.append(contents[index:next_index])
-    
+    ref_list = contents.split("@") # Creates a list of each entry in the .bib file
+    del ref_list[0] # First item in list is blank due to the .split function
             
 
 filename = BIB_DIR + "reference.bib"
