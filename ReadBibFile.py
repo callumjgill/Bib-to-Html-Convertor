@@ -7,17 +7,18 @@ Description: Takes a .bib file as input and stores the relevant information
 """
 # EXTERNAL MODULES
 import os
+import configparser
 
-# GLOBAL VARIABLES
-BIB_DIR = r"test-bib-files/" # Folder to read the bib files from
-CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-BIB_DIR = os.path.join(CURRENT_DIR, BIB_DIR)
+# Read the config file
+config_parser = configparser.RawConfigParser()
+config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.properties")
+config_parser.read(config_path)
 
-# PUBLIC FUNCTIONS
-def readBib(bib_file):
+# FUNCTIONS
+def readBibEntries(bib_file):
     """
-        Function which takes a .bib file input and returns a list of dictionaries where each
-        dictionary corresponds to an entry in the file.
+        Function which takes a .bib file input and returns a list of strings where each
+        string corresponds to an entry in the file.
 
         Parameters:
             file : file object
@@ -28,8 +29,23 @@ def readBib(bib_file):
     contents = bib_file.read() # Contents of the .bib file
     ref_list = contents.split("@") # Creates a list of each entry in the .bib file
     del ref_list[0] # First item in list is blank due to the .split function
-            
+    return ref_list
 
-filename = BIB_DIR + "reference.bib"
+# PUBLIC CLASSES
+class reference:
+    "Class corresponding to an entry in a .bib file"
+
+
+    def __init__(self, bib_entry):
+        """
+
+        Constructor for reference object. Assigns all fields in .bib entry into
+        class attributes
+
+        """
+        #self.entry_type = 
+
+# TESTING
+filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), config_parser.get("Directory Paths", "bib_path"), "reference.bib")
 bib_file = open(filename, "r")
-readBib(bib_file)
+entries = readBibEntries(bib_file)
