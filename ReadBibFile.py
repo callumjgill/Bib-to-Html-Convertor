@@ -14,7 +14,8 @@ import configparser
 CONFIG_PARSER = configparser.RawConfigParser()
 config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.properties")
 CONFIG_PARSER.read(config_path)
-# All valid field types from config file
+# All valid entry and field types from config file
+VALID_ENTRIES = dict(CONFIG_PARSER.items("Bib Entry Types"))
 VALID_FIELDS = dict(CONFIG_PARSER.items("Bib Field Types"))
 
 # FUNCTIONS
@@ -60,7 +61,7 @@ class Reference:
     def __readEntry(self, bib_entry):
         """
             Reads the .bib entry and returns a tuple with the entry type as a string and a
-            dictionary for the entries.
+            dictionary for the fields.
 
             Parameters:
                     bib_entry : string
@@ -77,6 +78,7 @@ class Reference:
         fields_list_str = temp_list[1].replace("\n", "").replace("\t", "") # single string storing all fields, also replaces irrelevant characters
         # Format the entry type string to just be the entry type name
         entry_type = entry_type.split("{", 1)[0]
+        assert self.__checkEntry(entry_type), r"%s is not a valid entry type!" % entry_type
         # Format the fields into a list and then into a dictionary
         # First it replaces the string '},' whereever it appears with '",'
         # Then it splits at '",". This will then correctly get each field entry as you can either enclose them in " " or { }
@@ -87,8 +89,7 @@ class Reference:
             key_value_list = field.split("=")
             key = key_value_list[0].replace(" ", "")
             # checks if the field type is valid
-            is_key_valid = self.__checkField(key)
-            assert is_key_valid, r"%s is not a valid field type!" % key
+            assert self.__checkField(key), r"%s is not a valid field type!" % key
             # Removes unnecessary characters from the value
             value = key_value_list[1].replace("{", "").replace("}", "").replace(' "', "").replace('"', "")
             # If the field type is author then each author is stored as a list of strings
@@ -98,6 +99,23 @@ class Reference:
             # Builds the dictionary with each field entry type as a key and the value the content of the field
             fields[key] = value
         return (entry_type, fields)
+
+    def __checkEntry(self, entry_type):
+        """
+            Checks the entry type against the config file for valid entry types.
+
+            Parameters:
+                entry_type : string
+                    The entry type being tested
+
+            Returns:
+                is_valid : boolean
+                    true if valid, false otherwise
+        """
+        is_valid = False
+        if entry_type in VALID_ENTRIES.keys():
+            is_valid = True
+        return is_valid
 
     def __checkField(self, field):
         """
