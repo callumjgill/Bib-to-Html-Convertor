@@ -29,4 +29,7 @@ def getSectionItems(section_name):
             dict_of_items : dictionary {key:value}
                 dictionary corresponds to each key:value pair in the config.properties file
     """
-    return dict(CONFIG_PARSER.items(section_name))
+    list_of_items = CONFIG_PARSER.items(section_name)
+    # Items which are set to true in config.properties are only returned
+    dict_of_items = dict([item for item in list_of_items if item[1].lower() == 'true'])
+    return dict_of_items
