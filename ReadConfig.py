@@ -10,12 +10,23 @@ and stores them as global variables that are imported into the other .py files
 import os
 import configparser
 
-# Read the config file
+# GLOBAL VARIABLES
 CONFIG_PARSER = configparser.RawConfigParser()
 config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.properties")
 CONFIG_PARSER.read(config_path)
 # .bib file path name
 BIB_PATH = CONFIG_PARSER.get("Directory Paths", "bib_path") + "reference.bib"
-# All valid entry and field types from config file
-VALID_ENTRIES = dict(CONFIG_PARSER.items("Bib Entry Types"))
-VALID_FIELDS = dict(CONFIG_PARSER.items("Bib Field Types"))
+
+def getSectionItems(section_name):
+    """
+        Returns a dictionary containing every item in a section of the config.properties file.
+
+        Parameters:
+            section_name : section_name
+                the name of the section to retrieve the items from
+
+        Returns:
+            dict_of_items : dictionary {key:value}
+                dictionary corresponds to each key:value pair in the config.properties file
+    """
+    return dict(CONFIG_PARSER.items(section_name))
