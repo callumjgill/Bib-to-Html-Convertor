@@ -30,6 +30,15 @@ def getSectionItems(section_name):
                 dictionary corresponds to each key:value pair in the config.properties file
     """
     list_of_items = CONFIG_PARSER.items(section_name)
-    # Items which are set to true in config.properties are only returned
-    dict_of_items = dict([item for item in list_of_items if item[1].lower() == 'true'])
+    dict_of_items = {}
+    if section_name == "Bib Entry Types" or section_name == "Bib Field Types":
+        # Items which are set to true in config.properties are only returned
+        dict_of_items = dict([item for item in list_of_items if item[1].lower() == 'true'])
+    else:
+        # If the value in config.properties is a list, where each list item is separated by a comma,
+        # then store the value as a list in the dictionary
+        # Seperate a value representing a list into an actual list and remove whitespace
+        dict_of_items = dict([(key, value.replace(" ", "").split(",")) for (key, value) in list_of_items])
     return dict_of_items
+
+print(getSectionItems("Required Fields"))
