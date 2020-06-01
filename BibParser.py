@@ -3,33 +3,29 @@ Author: Callum J Gill.
 Email: callum.j.gill@googlemail.com
 Date created: 21/05/20
 
-Description: Takes a .bib file as input and stores the relevant information
+Description: Parser that takes a .bib file as input and stores the each entry as an 
+object with the fields being the objects attributes and are stored as dictionaries .
 """
-# EXTERNAL MODULES
+# MODULES
 import os
-import configparser
+import ReadConfig
 
-
-# Read the config file
-CONFIG_PARSER = configparser.RawConfigParser()
-config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.properties")
-CONFIG_PARSER.read(config_path)
-# All valid entry and field types from config file
-VALID_ENTRIES = dict(CONFIG_PARSER.items("Bib Entry Types"))
-VALID_FIELDS = dict(CONFIG_PARSER.items("Bib Field Types"))
+# GLOBAL VARIABLES
+VALID_ENTRIES = ReadConfig.getSectionItems("Bib Entry Types")
+VALID_FIELDS = ReadConfig.getSectionItems("Bib Field Types")
 
 # FUNCTIONS
-def readBibEntries(bib_file):
+def bibParser(bib_file):
     """
-        Function which takes a .bib file input and returns a list of strings where each
-        string corresponds to an entry in the file.
+        Takes a .bib filename input and returns a list of Reference objects where each
+        object corresponds to an entry in the file.
 
         Parameters:
-            file : file object
+            bib_file : file object
                 the .bib file being read. Must be a .bib file otherwise an AssertError exception is made
 
         Returns:
-            ref_list : list of strings
+            ref_list : Reference object
                 each item in the list is an object corresponding to a single reference entry in the .bib file
     """
     ext = bib_file.name.rpartition(".")[-1]
@@ -40,10 +36,11 @@ def readBibEntries(bib_file):
     ref_list = [Reference(ref) for ref in ref_list_str]
     return ref_list
 
-# PUBLIC CLASSES
+# CLASSES
 class Reference:
     "Class corresponding to an entry in a .bib file"
 
+    # CONSTRUCTOR
 
     def __init__(self, bib_entry):
         """
@@ -53,11 +50,14 @@ class Reference:
             parameters:
                 bib_entry : string
                     the entry in the .bib file which has been stored as a string
-
+            
+            Returns:
+                None
         """
         self.entry_type, self.fields = self.__readEntry(bib_entry)
 
-    # "PRIVATE" METHODS
+    # METHODS
+    ## "PRIVATE"
     def __readEntry(self, bib_entry):
         """
             Reads the .bib entry and returns a tuple with the entry type as a string and a
@@ -135,6 +135,6 @@ class Reference:
         return is_valid
 
 # TESTING
-filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), CONFIG_PARSER.get("Directory Paths", "bib_path"), "reference.bib")
+filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), ReadConfig.BIB_PATH)
 bib_file = open(filename, "r")
-entries = readBibEntries(bib_file)
+entries = readBibFile(bib_file)
