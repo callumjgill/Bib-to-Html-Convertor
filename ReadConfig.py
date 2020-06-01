@@ -40,5 +40,3 @@ def getSectionItems(section_name):
         # Seperate a value representing a list into an actual list and remove whitespace
         dict_of_items = dict([(key, value.replace(" ", "").split(",")) for (key, value) in list_of_items])
     return dict_of_items
-
-print(getSectionItems("Required Fields"))
