@@ -78,7 +78,7 @@ class Reference:
         fields_list_str = temp_list[1].replace("\n", "").replace("\t", "") # single string storing all fields, also replaces irrelevant characters
         # Format the entry type string to just be the entry type name
         entry_type = entry_type.split("{", 1)[0]
-        assert self.__checkEntry(entry_type), r"%s is not a valid entry type!" % entry_type
+        assert self.__checkIfValid(entry_type, VALID_ENTRIES), r"%s is not a valid entry type!" % entry_type
         # Format the fields into a list and then into a dictionary
         # First it replaces the string '},' whereever it appears with '",'
         # Then it splits at '",". This will then correctly get each field entry as you can either enclose them in " " or { }
@@ -89,7 +89,7 @@ class Reference:
             key_value_list = field.split("=")
             key = key_value_list[0].replace(" ", "")
             # checks if the field type is valid
-            assert self.__checkField(key), r"%s is not a valid field type!" % key
+            assert self.__checkIfValid(key, VALID_FIELDS), r"%s is not a valid field type!" % key
             # Removes unnecessary characters from the value
             value = key_value_list[1].replace("{", "").replace("}", "").replace(' "', "").replace('"', "")
             # If the field type is author then each author is stored as a list of strings
@@ -100,37 +100,23 @@ class Reference:
             fields[key] = value
         return (entry_type, fields)
 
-    def __checkEntry(self, entry_type):
+    def __checkIfValid(self, input_test, config_section):
         """
-            Checks the entry type against the config file for valid entry types.
+            Checks if the input is appears in the config file
 
             Parameters:
-                entry_type : string
-                    The entry type being tested
+                input_test : string
+                    The input being tested
+
+                config_section : dictionary
+                    The dictionary that the input is being tested against
 
             Returns:
                 is_valid : boolean
                     true if valid, false otherwise
         """
         is_valid = False
-        if entry_type in VALID_ENTRIES.keys():
-            is_valid = True
-        return is_valid
-
-    def __checkField(self, field):
-        """
-            Checks the field type against the config file for valid field types.
-            
-            Parameters:
-                field : string
-                    The field type being tested
-
-            Returns:
-                is_valid : boolean 
-                    true if valid, false otherwise
-        """
-        is_valid = False
-        if field in VALID_FIELDS.keys():
+        if input_test in config_section.keys():
             is_valid = True
         return is_valid
 
