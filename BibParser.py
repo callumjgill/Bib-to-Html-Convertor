@@ -20,15 +20,16 @@ OPTIONAL_FIELDS = ReadConfig.getSectionItems("Optional Fields")
 # FUNCTIONS
 def bibParser(bib_file):
     """
-        Takes a .bib filename input and returns a list of Reference objects where each
-        object corresponds to an entry in the file.
+        Takes a .bib filename input and returns an list of Reference objects where each
+        object corresponds to an entry in the file. List is ordered in the order in which each
+        entry appears in the .bib file, not the document or order the references appear in.
 
         Parameters:
             bib_file : file object
                 the .bib file being read. Must be a .bib file otherwise an AssertError exception is made
 
         Returns:
-            ref_list : Reference object
+            ref_list : list of Reference objects
                 each item in the list is an object corresponding to a single reference entry in the .bib file
     """
     ext = bib_file.name.rpartition(".")[-1]
@@ -52,6 +53,7 @@ class Reference:
             class attributes
 
             parameters:
+
                 bib_entry : string
                     the entry in the .bib file which has been stored as a string
             
@@ -100,11 +102,16 @@ class Reference:
             if not self.__checkField(entry_type, key):
                 raise ValueError(r"%s isn't a recognised field type for the entry type %s!" % (key, entry_type))
             # Removes unnecessary characters from the value
-            value = key_value_list[1].replace("{", "").replace("}", "").replace(' "', "").replace('"', "")
-            # If the field type is author then each author is stored as a list of strings
-            if key == 'author':
-                # Removes whitespace in front of first author name and splits string a the comma. Also removes whitespace in front of other authors if there is any
-                value = value.replace(" ", "", 1).replace(", ", ",").split(",")
+            value = key_value_list[1].replace("{", "").replace("}", "").replace(' "', "").replace('"', "").replace(" \\", "")
+            # If the field type is author or editor then each author/editor is stored as a list of strings
+            if key == 'author' or key == 'editor':
+                # Splits string at the comma for each author.
+                value = value.replace(", ", ",").split(",")
+                # Removes whitespace in front of each author name if there is any
+                for index, item in enumerate(value):
+                    if item[0] == " ":
+                        item.replace(" ", "", 1)
+                        value[index] = item
             # Builds the dictionary with each field entry type as a key and the value the content of the field
             fields[key] = value
         # Final check is to see if all required fields have been given
@@ -133,11 +140,11 @@ class Reference:
         is_valid = False
         # required fields for the entry type
         required = REQUIRED_FIELDS[entry_type]
+        # optional fields for the entry type
         optional = OPTIONAL_FIELDS[entry_type]
         if field in required or field in optional:
             is_valid = True
         return is_valid
-        # optional fields for the entry type
 
     def __checkIfValid(self, input_test, config_section):
         """
