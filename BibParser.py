@@ -112,6 +112,10 @@ class Reference:
                     if item[0] == " ":
                         item.replace(" ", "", 1)
                         value[index] = item
+            elif key == "howpublished":
+                # Deals with the possibility of a /url{} in howpublished if present
+                if value[:3] == "url":
+                    value = value[3:] #removes url from first part of string
             # Builds the dictionary with each field entry type as a key and the value the content of the field
             fields[key] = value
         # Final check is to see if all required fields have been given
