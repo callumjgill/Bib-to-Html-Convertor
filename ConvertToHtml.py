@@ -50,13 +50,17 @@ def format2Html(ref):
     
 
 # Write references into a .html file
-def convert2Html(refs):
+def convert2Html(refs, html_file_name):
     """
         Converts all of the references in the .bib file into a readable HTML code file.
         References are written as an ordered list in HTML in the order they appear in the .bib file.
 
         Parameters:
-            refs: list of formatted (see format2Html) Reference classes
+            refs: list of Reference classes
+                list of Reference classes that have already been formatted from the format2Html() function
+            
+            html_file_name : string
+                filepath to save the html file to
 
         Returns:
             None
@@ -81,14 +85,6 @@ def convert2Html(refs):
         ref_html = ref_html[:-2] + "." # Replaces last comma with a fullstop
         html_code += "\t\t\t<li>" + ref_html + "</li>\n"
     html_code = start + html_code + end # Final html code
-    file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), ReadConfig.HTML_PATH)
-    with open(file_path + "references.html", "w+") as html_file:
+    file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), html_file_name)
+    with open(file_path, "w+") as html_file:
         html_file.write(html_code)
-    
-
-
-# TESTING
-filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), ReadConfig.BIB_PATH)
-with open(filename, "r") as bib_file:
-    references = [format2Html(ref) for ref in BibParser.bibParser(bib_file)]
-convert2Html(references)

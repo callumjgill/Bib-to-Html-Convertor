@@ -14,10 +14,6 @@ import configparser
 CONFIG_PARSER = configparser.RawConfigParser()
 config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.properties")
 CONFIG_PARSER.read(config_path)
-# .bib file path name
-BIB_PATH = CONFIG_PARSER.get("Directory Paths", "bib_path") + "reference.bib"
-# Directionary to store converted html files
-HTML_PATH = CONFIG_PARSER.get("Directory Paths", "html_path")
 
 def getSectionItems(section_name):
     """
