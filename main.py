@@ -175,6 +175,17 @@ class App(QWidget):
         
 
     def openFileNameDialog(self):
+        """
+            Method executed when the open bib file button is pressed.
+            Simply returns the path name to the chosen bib file for conversion.
+
+            Parameters:
+                None
+            
+            Returns:
+                file_name : string
+                    The path name to the bib file  
+        """
         file_name = QFileDialog.getOpenFileName(self, self.tr("Load bib document"), "", self.tr("bib files (*.bib)"))[0]
         if file_name:
             if not QFileInfo(file_name).suffix():
@@ -182,12 +193,24 @@ class App(QWidget):
         return file_name
     
     def saveFileDialog(self):
+        """
+            Method executed when the chose html file location button is pressed.
+            Simply returns the path name to the chosen path for the html file.
+
+            Parameters:
+                None
+            
+            Returns:
+                file_name : string
+                    The path name to the bib file  
+        """
         file_name = QFileDialog.getSaveFileName(self, self.tr("Save html file"),"",self.tr("html files (*.html)"))[0]
         if file_name:
             if not QFileInfo(file_name).suffix():
                 file_name += ".html"
         return file_name
 
+# Main code
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
