@@ -22,7 +22,7 @@ Please give feedback on the app. I want to constantly improve accessibility and 
 
 Motivation
 ----------
-The idea for this app came from me trying to find a dedicated .bib to .html convertor and only finding programs which dealt with specific .bib files and not a general case. I needed to make a website for one of my university modules and a bibliography had to be included. I didn't really want to write out the entirety of the references in my html files but I was constrained for time so I had to do it that way. I hope that this simple app allows someone else in the same position as I was to easily transfer the contents of their bib files into html code. Maybe I'm just lazy but I thought it would be useful and a fun project to work on.
+The idea for this app came from me trying to find a dedicated .bib to .html convertor and only finding programs which dealt with specific .bib files and not a general case. I needed to make a website for one of my university modules and a bibliography had to be included. I didn't really want to write out the entirety of the references in my html files but I was constrained for time so I had to do it that way. I hope that this simple app allows someone else in the same position as I was to easily transfer the contents of their bib files into html code.
 
 I'm not a computer science student, I study Theoretical Physics but have a keen interest in software development and programming.
 
